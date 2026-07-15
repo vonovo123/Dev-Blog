@@ -93,9 +93,7 @@ flowchart LR
 
 ---
 
-## 🔍 기술적 도전과 해결 (Troubleshooting)
-
-> 포트폴리오에서 "문제 해결 능력"을 보여줄 수 있는 핵심 사례들입니다.
+## 🔍 Troubleshooting
 
 ### 1. Vercel 프로덕션 500 에러 디버깅 (ERR_REQUIRE_ESM)
 - **문제:** 로컬은 정상인데 배포 후 SSR 페이지만 500. 정적 페이지·API는 정상이라 원인 파악이 까다로움.
