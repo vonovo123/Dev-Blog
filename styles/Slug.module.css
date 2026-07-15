@@ -58,6 +58,11 @@
 .postImage {
   height: 250px;
 }
+/* 위 클래스도 antd 6의 .ant-image-img 주입 스타일에 덮이므로, 래퍼 기준으로 강제한다. */
+.postImageWrapper :global(.ant-image) img {
+  height: 250px;
+  width: auto;
+}
 .contentHeaderInfo {
   width: 100%;
   font-weight: bold;
@@ -82,10 +87,22 @@
   justify-content: center;
 }
 .authorImage {
-  height: 40px;
-  width: 40px;
   border-radius: 10px;
+}
+/* antd 6 <Image>는 .ant-image 래퍼와 .ant-image-img{width:100%;height:auto}를 주입해
+   <img>에 직접 준 클래스 크기를 덮어쓴다. 래퍼(.ant-image) 기준 선택자로 우선순위를
+   높여 40x40 아바타 크기를 강제한다. */
+.authorInfo :global(.ant-image) {
+  width: 40px;
+  height: 40px;
   margin-right: 10px;
+  flex-shrink: 0;
+}
+.authorInfo :global(.ant-image) img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
 }
 .authorInfo {
   display: flex;
