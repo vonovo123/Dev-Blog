@@ -15,51 +15,49 @@ export default function About({ profile, home }) {
   return (
     profile && (
       <div className={cx("about")}>
-        <Row className={cx("profileWrapper")}>
-          <Col className={cx("profileTitle")} span={24}>
-            {" ABOUT ME "}
-          </Col>
-          <Col className={cx("profileDescImageWrapper")} span={10}>
-            <Image
-              src={profile.thumbnail.imageUrl}
-              alt={"profile_image"}
-              className={cx("profileDescImage")}
-              preview={false}
-            ></Image>
-          </Col>
-          <Col className={cx("profileBref")} span={14}>
-            <Row>
-              <Col span={24} className={cx("profileDescInfoDetail")}>
-                <TeamOutlined />
-                <span className={cx("text")}>{profile.company}</span>
-              </Col>
-              <Col span={24} className={cx("profileDescInfoDetail")}>
-                <EnvironmentOutlined />
-                <span className={cx("text")}>{profile.location}</span>
-              </Col>
-              <Col span={24} className={cx("profileDescInfoDetail")}>
-                <GithubOutlined />
-                <span className={cx("text")}>
+        <div className={cx("profileWrapper")}>
+          <div className={cx("profileTitle")}>ABOUT ME</div>
+          <Row className={cx("profileContent")} align="middle" gutter={[24, 16]}>
+            <Col className={cx("profileDescImageWrapper")} xs={24} sm={8}>
+              <Image
+                src={profile.thumbnail.imageUrl}
+                alt={"profile_image"}
+                className={cx("profileDescImage")}
+                preview={false}
+              />
+            </Col>
+            <Col className={cx("profileBref")} xs={24} sm={16}>
+              <ul className={cx("infoList")}>
+                <li className={cx("profileDescInfoDetail")}>
+                  <TeamOutlined className={cx("icon")} />
+                  <span className={cx("text")}>{profile.company}</span>
+                </li>
+                <li className={cx("profileDescInfoDetail")}>
+                  <EnvironmentOutlined className={cx("icon")} />
+                  <span className={cx("text")}>{profile.location}</span>
+                </li>
+                <li className={cx("profileDescInfoDetail")}>
+                  <GithubOutlined className={cx("icon")} />
                   <a
                     href={profile.gitUrl}
                     target={"_blank"}
                     rel="noreferrer"
-                    className={cx("aTag")}
+                    className={cx("aTag", "text")}
                   >
                     {profile.gitUrl}
                   </a>
-                </span>
-              </Col>
-              <Col span={24} className={cx("profileDescInfoDetail")}>
-                <MessageOutlined />
-                <span className={cx("text")}>{profile.intro}</span>
-              </Col>
-            </Row>
-          </Col>
-          {/* <Col span={24}>
-            <BlogMarkDown markdown={home.homeContent.markdown} />
-          </Col> */}
-        </Row>
+                </li>
+                <li className={cx("profileDescInfoDetail")}>
+                  <MessageOutlined className={cx("icon")} />
+                  <span className={cx("text")}>{profile.intro}</span>
+                </li>
+              </ul>
+            </Col>
+            {/* <Col span={24}>
+              <BlogMarkDown markdown={home.homeContent.markdown} />
+            </Col> */}
+          </Row>
+        </div>
       </div>
     )
   );

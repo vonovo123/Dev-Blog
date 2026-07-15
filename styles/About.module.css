@@ -1,7 +1,6 @@
 .about {
   width: 100%;
   height: 100%;
-  font-weight: 500;
   font-size: 13px;
   transition: all 1s;
   font-weight: bold;
@@ -14,20 +13,19 @@
 }
 
 .profileWrapper {
-  padding: 20px;
+  padding: 24px;
 }
 .profileTitle {
-  margin-bottom: 20px;
-  margin-left: 35px;
+  margin-bottom: 24px;
   font-size: 23px;
+  letter-spacing: 1px;
 }
+
 .profileDescImageWrapper {
-  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .profileDescImage {
   border-radius: 10px;
 }
@@ -45,24 +43,39 @@
   border-radius: 10px;
 }
 
-.profileBref {
-  padding-left: 10px;
+.infoList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-
+/* 아이콘과 텍스트를 flex로 정렬해 긴 URL도 아이콘 밑으로 새지 않고 깔끔히 줄바꿈된다. */
 .profileDescInfoDetail {
-  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+  line-height: 1.6;
   cursor: pointer;
 }
+.profileDescInfoDetail:last-child {
+  margin-bottom: 0;
+}
+.icon {
+  flex-shrink: 0;
+  margin-top: 4px;
+  font-size: 15px;
+}
 .text {
-  margin-left: 10px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 @media only screen and (max-width: 767px) {
-  .aboutWrapper {
-    width: 100%;
-    top: 91%;
+  .profileWrapper {
+    padding: 16px;
   }
-  .aboutWrapper.show {
-    top: 45%;
+  .profileTitle {
+    margin-bottom: 16px;
+    text-align: center;
   }
 }
