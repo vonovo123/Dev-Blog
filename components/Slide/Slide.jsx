@@ -41,7 +41,7 @@ export default function Carousel({
 
   const move = useCallback(
     (dir) => {
-      const nextIdx = 0;
+      let nextIdx = 0;
       if (dir === "prev") {
         nextIdx = index - 1;
       } else if (dir === "next") {

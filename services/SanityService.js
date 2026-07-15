@@ -1,4 +1,4 @@
-import sanityClient from "@sanity/client";
+import { createClient } from "@sanity/client";
 const homeUrl = `*[_type == 'home']{
   title,
   homeContent,
@@ -180,7 +180,7 @@ const careerUrl = `
   }
 `;
 export default class SanityService {
-  _client = sanityClient({
+  _client = createClient({
     dataset: "production",
     projectId: process.env.SANITY_PROJECT_ID,
     apiVersion: "2022-06-18", // use a UTC date string

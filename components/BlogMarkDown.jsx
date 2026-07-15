@@ -8,9 +8,11 @@ export default function BlogMarkDown({ markdown }) {
     <div id="content">
       <ReactMarkdown
         components={{
-          code({ node, inline, className, children, ...props }) {
+          // react-markdown v9+ no longer passes an `inline` prop. Block code
+          // is detected via the `language-*` class produced by fenced blocks.
+          code({ node, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || "");
-            return !inline && match ? (
+            return match ? (
               <SyntaxHighlighter
                 style={docco}
                 language={match[1]}

@@ -29,8 +29,19 @@
 }
 
 .profileDescImage {
+  border-radius: 10px;
+}
+/* antd 6 <Image> injects `.ant-image .ant-image-img { width:100%; height:auto }`,
+   which outranks a plain class on the <img>. Force a fixed, cropped box via a
+   wrapper-scoped selector. */
+.profileDescImageWrapper :global(.ant-image) {
   width: 150px;
   height: 150px;
+}
+.profileDescImageWrapper :global(.ant-image) img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 10px;
 }
 

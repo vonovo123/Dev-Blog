@@ -21,10 +21,19 @@
   border-radius: 10px;
 }
 .elementImage {
+  border-radius: 10px;
+}
+/* antd 6 <Image> injects `.ant-image .ant-image-img { width:100%; height:auto }`,
+   which outranks a plain class on the <img> and lets the banner image grow to
+   its natural height. Force a fixed, cropped box via a wrapper-scoped selector. */
+.elementInnerWrapper :global(.ant-image) {
   width: 100%;
   height: 198px;
+}
+.elementInnerWrapper :global(.ant-image) img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 10px;
 }
 
 .elementContentWrapper {

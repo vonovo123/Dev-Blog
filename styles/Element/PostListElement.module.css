@@ -13,10 +13,21 @@
   width: 150px;
 }
 .elementImage {
+  border-radius: 10px;
+}
+/* antd 6 <Image> nests the <img> under `.ant-image` and injects
+   `.ant-image .ant-image-img { width:100%; height:auto }`, which outranks a
+   plain class on the <img>, so images render at their natural size and rows get
+   uneven heights. Scope the box to the wrapper to win on specificity and force
+   a fixed, cropped size. */
+.elementImageWrapper :global(.ant-image) {
   width: 120px;
   height: 120px;
+}
+.elementImageWrapper :global(.ant-image) img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 10px;
 }
 .elementContentWrapper {
   width: calc(100% - 155px);

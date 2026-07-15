@@ -1,4 +1,4 @@
-import "antd/dist/antd.css";
+import "antd/dist/reset.css";
 import "../styles/reset.css";
 import "../styles/globals.css";
 import { useCallback, useEffect, useRef, useState } from "react";

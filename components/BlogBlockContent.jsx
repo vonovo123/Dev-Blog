@@ -1,13 +1,13 @@
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/cjs/styles/hljs";
-import BlockContent from "@sanity/block-content-to-react";
+import { PortableText } from "@portabletext/react";
 import styles from "../styles/Slug.module.css";
-import imageUrlBuilder from "@sanity/image-url";
-import sanityClient from "@sanity/client";
+import { createImageUrlBuilder } from "@sanity/image-url";
+import { createClient } from "@sanity/client";
 import classNames from "classnames/bind";
 const cx = classNames.bind(styles);
-const builder = imageUrlBuilder(
-  sanityClient({
+const builder = createImageUrlBuilder(
+  createClient({
     dataset: "production",
     projectId: process.env.SANITY_PROJECT_ID,
     apiVersion: "2022-06-18", // use a UTC date string
@@ -15,13 +15,17 @@ const builder = imageUrlBuilder(
     useCdn: process.env.NODE_ENV === "production",
   })
 );
-function urlFor(imageUrl) {
-  return builder.image(imageUrl);
+function urlFor(source) {
+  return builder.image(source);
 }
-const serializers = {
+
+// @portabletext/react components. Each custom type receives `{ value }`
+// (the block node), replacing the `{ node }` prop from the old
+// @sanity/block-content-to-react serializers.
+const components = {
   types: {
-    code: ({ node }) => {
-      const { code } = node;
+    code: ({ value }) => {
+      const { code } = value;
       return (
         <div>
           <SyntaxHighlighter language="javascript" style={docco}>
@@ -30,24 +34,16 @@ const serializers = {
         </div>
       );
     },
-    video: ({ node }) => {
-      return <p>video</p>;
-    },
-    link: ({ node }) => {
-      return <p>link</p>;
-    },
-    imageGallery: ({ node }) => {
-      return <p>imageGallery</p>;
-    },
-    image: (props) => {
+    video: () => <p>video</p>,
+    link: () => <p>link</p>,
+    imageGallery: () => <p>imageGallery</p>,
+    image: ({ value }) => {
       return (
         <figure className={cx("img-wrapper")}>
-          <figcaption className={cx("img-caption")}>
-            # {props.node.caption}
-          </figcaption>
+          <figcaption className={cx("img-caption")}># {value.caption}</figcaption>
           <img
-            src={urlFor(props.node.asset).width(400).height(400).url()}
-            alt={props.node.alt}
+            src={urlFor(value).width(400).height(400).url()}
+            alt={value.alt}
             style={{ borderRadius: "5px" }}
           />
         </figure>
@@ -60,12 +56,7 @@ export default function BlogBlockContent({ blocks }) {
   return (
     blocks && (
       <div id="content">
-        <BlockContent
-          blocks={blocks}
-          projectId={process.env.SANITY_PROJECT_ID}
-          dataset="production"
-          serializers={serializers}
-        ></BlockContent>
+        <PortableText value={blocks} components={components} />
       </div>
     )
   );

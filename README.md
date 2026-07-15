@@ -1,50 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Dynamic_Kwon Dev Blog & Portfolio
 
-## Getting Started
+Sanity(headless CMS)를 백엔드로 사용하는 개인 기술 블로그 겸 포트폴리오 웹 애플리케이션입니다. Next.js(Pages Router) 기반 SSR/SSG로 동작합니다.
 
-First, run the development server:
+## 기술 스택
 
-```bash
-npm run dev
-# or
-yarn dev
+| 구분 | 사용 기술 |
+| --- | --- |
+| 프레임워크 | [Next.js](https://nextjs.org/) 16 (Pages Router) |
+| UI 라이브러리 | [React](https://react.dev/) 19 |
+| 컴포넌트 | [Ant Design](https://ant.design/) 6, [@ant-design/icons](https://ant.design/components/icon) 6 |
+| CMS / 데이터 | [Sanity](https://www.sanity.io/) — `@sanity/client` 7, `@sanity/image-url` 2 |
+| 콘텐츠 렌더링 | `@portabletext/react` 6 (Portable Text), `react-markdown` 10 + `remark-gfm` 4, `react-syntax-highlighter` 16 |
+| 유틸 | `dayjs`, `lodash`, `classnames`, `react-transition-group` |
+| 린팅 | ESLint 9 (flat config) + `eslint-config-next` 16 |
+| 스타일 | CSS Modules + Ant Design CSS-in-JS |
+
+## 주요 기능
+
+- **블로그**: 카테고리 / 서브카테고리별 글 목록, 최근 글 · 인기 글, 무한 스크롤 댓글/대댓글
+- **포트폴리오 & 커리어**: 프로젝트 소개, 경력 타임라인
+- **콘텐츠 렌더링**: Sanity Portable Text(Block Content)와 Markdown 혼합 지원, 코드 하이라이팅
+- **부가 기능**: 목차(TOC) 자동 생성, 조회수 증가, 반응형 레이아웃
+
+
+## 프로젝트 구조
+
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-skDtRDgl36BeTrJ7WvKYOCBjY9WZPNppJAIBrd0S1YI8hjmAYWX4QHUZKBTtIIeJKIVMaYTE5YUb9glw2OPWJ2ItfGu5ac2qjDFMeToP2y24fzJhfPG0ov57PaxgydjX2swry6RKVZH33IlCSZ3qdhDPu2H1NAb6QB9vs74bPXqW0UGR8XJg
-
-hy is this happening?
-The current schema does not declare items of type review as valid for this list. This could mean that the type has been removed as a valid item type, or that someone else has added it to their own local schema that is not yet deployed.
-You can still move or delete this item, but it cannot be edited since the schema definition for its type is nowhere to be found.
-JSON representation of this item:
-{
-"\_createdAt": "2022-10-07T08:23:43Z",
-"\_id": "my-review",
-"\_key": "os36Ir4WffAYIGwaU7vmsX",
-"\_rev": "ueR4P6AAHCFVBGi2CGp2OY",
-"\_type": "review",
-"\_updatedAt": "2022-10-07T08:23:43Z",
-"title": "Sanity Tandem Extraordinaire"
-}
+portpolio/
+├── pages/                # 라우트 (index, career, portpolio, post/[slug], 404, _app, _document, api)
+├── components/           # UI 컴포넌트 (About, Header, Footer, Carousel, Comment, Element 등)
+├── services/             # 데이터 접근 계층 (SanityService, GitProfileService)
+├── utils/                # 헬퍼 (Observer, Headings, LocalStorage 등)
+├── styles/               # 전역 스타일 및 CSS Modules
+├── fonts/                # 폰트 파일
+├── assets/ · public/     # 정적 리소스
+├── next.config.js        # Next.js 설정 (env 매핑)
+└── eslint.config.mjs     # ESLint flat config
+```
