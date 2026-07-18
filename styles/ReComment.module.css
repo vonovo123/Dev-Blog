@@ -32,11 +32,14 @@
 .lengthCount {
   position: absolute;
   width: 70px;
-  height: 100%;
+  height: 35px;
   display: flex;
   align-items: center;
   right: 10px;
-  color: grey;
+  top: 28px;
+  color: var(--muted-font-color);
+  pointer-events: none;
+  z-index: 1;
 }
 .nickNameInput {
   width: 100%;
@@ -45,6 +48,8 @@
   padding-right: 90px;
   border-radius: 5px;
   border: var(--border-width) solid var(--border-color);
+  background-color: var(--background-elevated);
+  color: var(--font-color);
 }
 
 .commentInputTxt {
@@ -55,6 +60,8 @@
   padding-right: 90px;
   border-radius: 5px;
   border: var(--border-width) solid var(--border-color);
+  background-color: var(--background-elevated);
+  color: var(--font-color);
 }
 
 .btnWrapper {
@@ -68,6 +75,8 @@
   border-radius: 5px;
   cursor: pointer;
   border: var(--border-width) solid var(--border-color);
+  background-color: var(--background-elevated);
+  color: var(--font-color);
 }
 .commentList {
   margin-bottom: 20px;
@@ -101,7 +110,7 @@
   width: 50px;
   height: 50px;
 }
-.cotentWrapper {
+.commentBody {
   width: 100%;
 }
 .commentName {
@@ -112,7 +121,7 @@
 .commentDate {
   width: 100%;
   text-align: right;
-  color: grey;
+  color: var(--muted-font-color);
 }
 .commentTxt {
   width: 100%;
@@ -120,4 +129,15 @@
 
 .error {
   border-color: red;
+}
+.fieldLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.errorMsg {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #c62828;
 }

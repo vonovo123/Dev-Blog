@@ -5,6 +5,17 @@
   border: 2px solid var(--border-color);
   border-radius: 10px;
   cursor: pointer;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.elementWrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(25, 31, 40, 0.12);
 }
 .element {
   width: 100%;
@@ -38,21 +49,28 @@
 
 .elementContentWrapper {
   position: absolute;
-  background-color: black;
-  opacity: 0.6;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
   width: 100%;
   height: 198px;
   padding: 20px;
   display: flex;
+  align-items: flex-end;
   justify-content: center;
   border-radius: 10px;
 }
 .title {
   overflow: hidden;
   font-size: 25px;
-  color: white;
+  color: #ffffff;
   font-weight: bold;
   transition: all 0.5s;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
 .short {
@@ -69,7 +87,7 @@
 .tag {
   font-size: 10px;
   color: var(--tag-font-color);
-  background-color: grey;
+  background-color: var(--tag-color);
   border-radius: 5px;
   padding-top: 3px;
   margin: 2px;

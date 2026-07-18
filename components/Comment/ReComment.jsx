@@ -16,11 +16,11 @@ export default function ReComment({ comment, idx }) {
           <Image
             className={cx("image")}
             src={`https://placedog.net/100/100/?id=${idx + 10}`}
-            alt={"randomDog"}
+            alt=""
             preview={false}
           />
         </div>
-        <div className={cx("cotentWrapper")}>
+        <div className={cx("commentBody")}>
           <div className={cx("commentName")}>
             {JSON.parse(comment.nickName)}
           </div>

@@ -10,7 +10,6 @@ export default function DesktopMenu({
   menuInfo,
   subMenuInfo,
 }) {
-  const [page, setPage] = pageState;
   const [menu, setMenu] = menuState;
   const [menuType, setMenuType] = menuTypeState;
   const [subMenu, setSubMenu] = subMenuState;
@@ -26,11 +25,12 @@ export default function DesktopMenu({
   return (
     <div className={cx("menu", { hide: !subMenuInfoView })}>
       <div className={cx("mainMenuWrapper", { hide: !subMenuInfoView })}>
-        <div className={cx("main")}>
+        <div className={cx("main")} role="list">
           {menuInfo &&
             menuInfo.map(({ type, slug, name }, idx) => {
               return (
-                <div
+                <button
+                  type="button"
                   className={cx("nav", { sel: menu === slug })}
                   key={idx}
                   onClick={() => {
@@ -39,24 +39,25 @@ export default function DesktopMenu({
                   }}
                 >
                   {name}
-                </div>
+                </button>
               );
             })}
         </div>
       </div>
       <div className={cx("subMenuWrapper", { hide: !subMenuInfoView })}>
-        <div ref={menuRef} className={cx("sub")}>
+        <div ref={menuRef} className={cx("sub")} role="list">
           {subMenuInfoView &&
-            subMenuInfoView.map(({ type, name }, idx) => (
-              <div
+            subMenuInfoView.map(({ type, name }) => (
+              <button
+                type="button"
                 className={cx("nav", { sel: subMenu === type })}
                 key={type}
                 onClick={() => {
                   setSubMenu(type);
                 }}
               >
-                <div className={cx("text")}>{name}</div>
-              </div>
+                <span className={cx("text")}>{name}</span>
+              </button>
             ))}
         </div>
       </div>

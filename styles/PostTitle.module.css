@@ -1,22 +1,28 @@
 .titleWrapper {
   display: inline-flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-  font-size: 17px;
-  color: var(--font-color);
-  font-weight: bold;
-  transition: all 0.5s;
+  font-size: 13px;
+  color: var(--muted-font-color);
+  font-weight: 600;
+  letter-spacing: -0.01em;
   border-radius: 3px;
   transition: all 0.5s;
-  min-height: 50px;
+  min-height: 36px;
   overflow: hidden;
+  width: 100%;
 }
 .titleInnerWrapper {
   transition: all 0.5s;
 }
 .title {
   display: inline-block;
-  margin-right: 10px;
+  margin-right: 8px;
   transition: all 0.5s;
+  color: var(--secondary-font-color);
+}
+.title:last-child {
+  color: var(--font-color);
+  font-weight: 700;
 }

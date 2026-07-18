@@ -15,9 +15,9 @@ export default function Side({
   const createPostElement = useCallback(({ element, idx }) => {
     return (
       element && (
-        <div
-          className={cx("content")}
-          key={idx}
+        <button
+          type="button"
+          className={cx("content", "postItem")}
           onClick={() => {
             goSlug({ slug: element.slug });
           }}
@@ -31,62 +31,58 @@ export default function Side({
                 preview={false}
               />
             </div>
-            <div className={cx("cotentInnerWrapper")}>
+            <div className={cx("contentInnerWrapper")}>
               <div className={cx("postTxt")}>
                 {`${element.category.name} / ${element.subCategory.type} / ${element.title}`}
               </div>
               <div className={cx("subTitle")}>{element.subtitle}</div>
               <div className={cx("contentDate")}>
-                {dayjs(element.createdAt).format("MMMM DD HH:mm:ss")}
+                {dayjs(element.createdAt).format("MM.DD")}
               </div>
             </div>
           </div>
-        </div>
+        </button>
       )
     );
-  }, []);
+  }, [goSlug]);
   const createCommentElement = useCallback(({ element, idx }) => {
     return (
       element && (
-        <div
-          className={cx("content")}
+        <button
+          type="button"
+          className={cx("content", "commentItem")}
           onClick={() => {
             goSlug({ slug: element.postSlug });
           }}
         >
-          <div className={cx("contentWrapper")}>
-            <div className={cx("contentDate")}>
-              {dayjs(element.createdAt).format("MMMM DD HH:mm:ss")}
-            </div>
+          <div className={cx("contentDate")}>
+            {dayjs(element.createdAt).format("MM.DD")}
           </div>
-          <div className={cx("contentWrapper")}>
+          <div className={cx("commentBody")}>
             <div className={cx("imageWrapper")}>
               <Image
                 className={cx("image")}
                 src={`https://placedog.net/100/100/?id=${idx + 1}`}
-                alt={"randomDog"}
+                alt=""
                 preview={false}
               />
             </div>
-            <div className={cx("cotentInnerWrapper")}>
+            <div className={cx("commentText")}>
               <div className={cx("contentName")}>
                 {JSON.parse(element.nickName)}
               </div>
               <div className={cx("contentTxt")}>
                 {JSON.parse(element.comment)}
               </div>
-              <div
-                className={cx("postTitle")}
-              >{`from ${element.postTitle}`}</div>
+              <div className={cx("postTitle")}>{`from ${element.postTitle}`}</div>
             </div>
           </div>
-        </div>
+        </button>
       )
     );
-  }, []);
+  }, [goSlug]);
   return (
-    <>
-      {/* <AdSide></AdSide> */}
+    <aside>
       {pageView === "slug" && (
         <div className={cx("mb50")}>
           <List
@@ -117,6 +113,6 @@ export default function Side({
           </div>
         </>
       )}
-    </>
+    </aside>
   );
 }

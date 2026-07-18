@@ -1,9 +1,12 @@
 import SanityService from "../services/SanityService";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import Page from "./page/page";
-import { setLocalData, getLocalData } from "../utils/LocalStorage";
+import { getLocalData } from "../utils/LocalStorage";
 import HeadMeta from "../components/HeadMeta";
-export default function Home({
+
+const PAGE_TYPE = "career";
+
+export default function CareerPage({
   cachedPathState,
   menuTypeState,
   pageViewState,
@@ -16,41 +19,52 @@ export default function Home({
   home,
 }) {
   const [menuType, setMenuType] = menuTypeState;
-  const [subMenu, setSubMenu] = subMenuState;
-  const [pageView, setPageView] = pageViewState;
-  const [cachedPath, setCachedPath] = cachedPathState;
+  const [subMenu] = subMenuState;
+  const [, setPageView] = pageViewState;
+  const [, setCachedPath] = cachedPathState;
+  const routeReady = useRef(false);
+
   useEffect(() => {
+    routeReady.current = false;
     let page = getLocalData("page");
     let path = getLocalData("path");
-    if (!page || page !== "career") {
-      page = "career";
+    if (!page || page !== PAGE_TYPE) {
+      page = PAGE_TYPE;
       path = { menu: "career", subMenu: "career" };
     }
     if (!path || !path.menu || !path.subMenu) {
       path = { menu: "career", subMenu: "career" };
     }
+
+    setMenuType(PAGE_TYPE);
+    setPageView(PAGE_TYPE);
     setCachedPath({
       page,
       ...path,
     });
-    setMenuType("career");
-    setPageView("career");
   }, []);
+
+  useEffect(() => {
+    if (menuType === PAGE_TYPE) {
+      routeReady.current = true;
+    }
+  }, [menuType]);
+
   useEffect(() => {
     if (!subMenu) return;
-    if (menuType === "career") {
+    if (menuType === PAGE_TYPE) {
       fetchPostData();
-    } else {
-      goPage();
+      return;
     }
-    return;
-  }, [subMenu]);
+    if (!routeReady.current || !menuType) return;
+    goPage();
+  }, [subMenu, menuType]);
 
   return (
     <>
       <HeadMeta image={home && home.thumbnail.imageUrl}></HeadMeta>
       <Page
-        pageView={pageView}
+        pageView="career"
         post={post}
         loading={loading}
         goSlug={goSlug}
@@ -60,7 +74,6 @@ export default function Home({
 }
 
 export async function getServerSideProps() {
-  //sanity로 부터 데이터를 가져온다. getStaticProps 만 써야함
   const sanityService = new SanityService();
   const profile = await sanityService.getProfile();
   const category = await sanityService.getCategory();

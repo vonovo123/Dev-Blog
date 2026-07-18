@@ -1,9 +1,11 @@
 import SanityService from "../services/SanityService";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import Page from "./page/page";
-import { setLocalData, getLocalData } from "../utils/LocalStorage";
-import AdTop from "../components/AdBanner/AdTop";
+import { getLocalData } from "../utils/LocalStorage";
 import HeadMeta from "../components/HeadMeta";
+
+const PAGE_TYPE = "post";
+
 export default function Home({
   cachedPathState,
   menuTypeState,
@@ -17,42 +19,52 @@ export default function Home({
   home,
 }) {
   const [menuType, setMenuType] = menuTypeState;
-  const [subMenu, setSubMenu] = subMenuState;
-  const [pageView, setPageView] = pageViewState;
-  const [cachedPath, setCachedPath] = cachedPathState;
+  const [subMenu] = subMenuState;
+  const [, setPageView] = pageViewState;
+  const [, setCachedPath] = cachedPathState;
+  const routeReady = useRef(false);
+
   useEffect(() => {
+    routeReady.current = false;
     let page = getLocalData("page");
     let path = getLocalData("path");
-    if (!page || page !== "post") {
-      page = "post";
+    if (!page || page !== PAGE_TYPE) {
+      page = PAGE_TYPE;
       path = { menu: "home", subMenu: "recent" };
     }
     if (!path || !path.menu || !path.subMenu) {
       path = { menu: "home", subMenu: "recent" };
     }
 
+    setMenuType(PAGE_TYPE);
+    setPageView(PAGE_TYPE);
     setCachedPath({
       page,
       ...path,
     });
-    setMenuType("post");
-    setPageView("post");
   }, []);
+
+  useEffect(() => {
+    if (menuType === PAGE_TYPE) {
+      routeReady.current = true;
+    }
+  }, [menuType]);
+
   useEffect(() => {
     if (!subMenu) return;
-    if (menuType === "post") {
+    if (menuType === PAGE_TYPE) {
       fetchPostData();
-    } else {
-      goPage();
+      return;
     }
-    return;
-  }, [subMenu]);
+    if (!routeReady.current || !menuType) return;
+    goPage();
+  }, [subMenu, menuType]);
 
   return (
     <>
       <HeadMeta image={home && home.thumbnail.imageUrl}></HeadMeta>
       <Page
-        pageView={pageView}
+        pageView="post"
         post={post}
         loading={loading}
         goSlug={goSlug}

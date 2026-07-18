@@ -30,14 +30,15 @@ export default function TableOfContents({
             })}
             id={heading.el._key}
           >
-            <div
+            <button
+              type="button"
               className={cx("listTxt")}
               onClick={() => {
                 headClickEvent(heading.el);
               }}
             >
               {getChildrenText(heading)}
-            </div>
+            </button>
             {heading.subheadings.length > 0 &&
               createOrderedList(heading.subheadings)}
           </li>
@@ -61,7 +62,7 @@ export default function TableOfContents({
         </div>
         <div className={cx("tocContent")}>
           <div
-            className={cx("list", `lv$1`, {
+            className={cx("list", "lv1", {
               read: readKey === "sod",
             })}
           >
@@ -77,7 +78,7 @@ export default function TableOfContents({
           <div className={cx("listTxt")}>Content</div>
           {createOrderedList(outline)}
           <div
-            className={cx("list", `lv$1`, {
+            className={cx("list", "lv1", {
               read: readKey === "eod",
             })}
           >

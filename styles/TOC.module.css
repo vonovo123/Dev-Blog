@@ -1,12 +1,20 @@
 .toc {
-  color: rgb(220, 219, 219);
-  background-color: var(--background-colorA);
+  color: var(--toc-color);
+  background-color: var(--background-elevated);
   height: 100%;
+  border-radius: 10px;
 }
 .listTxt {
   transition: all 1s;
   font-weight: bold;
-  color: rgb(220, 219, 219);
+  color: var(--toc-color);
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  width: 100%;
 }
 .read > .listTxt {
   color: var(--toc-read-color);

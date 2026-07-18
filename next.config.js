@@ -6,8 +6,17 @@ const nextConfig = {
   // ERR_REQUIRE_ESM이 발생하므로, 번들에 포함(transpile)시켜 런타임 require를 없앤다.
   transpilePackages: ["react-syntax-highlighter"],
   env: {
+    // projectId만 클라에 노출 (이미지 URL 빌더용). AUTH 토큰은 서버 전용.
     SANITY_PROJECT_ID: process.env.SANITY_PROJECT_ID,
-    SANITY_AUTH_TOKEN: process.env.SANITY_AUTH_TOKEN,
+  },
+  async redirects() {
+    return [
+      {
+        source: "/portpolio",
+        destination: "/portfolio",
+        permanent: true,
+      },
+    ];
   },
 };
 

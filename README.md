@@ -81,7 +81,7 @@
 flowchart LR
   A["Sanity CMS<br/>(콘텐츠 · 이미지)"] -->|GROQ 쿼리| B["services/SanityService"]
   B --> C{"Next.js Data Fetching"}
-  C -->|getServerSideProps| D["SSR 페이지<br/>/ · /career · /portpolio · /post/[slug]"]
+  C -->|getServerSideProps| D["SSR 페이지<br/>/ · /career · /portfolio · /post/[slug]"]
   C -->|getStaticProps| E["정적 페이지<br/>/404 · /page"]
   D --> F["React 19 + Ant Design 6 렌더"]
   E --> F
@@ -110,16 +110,53 @@ flowchart LR
 ## 📂 프로젝트 구조
 
 ```
-portpolio/
-├── pages/                # 라우트 (index, career, portpolio, post/[slug], 404, _app, _document, api)
+Dev-Blog/
+├── pages/                # 라우트 (index, career, portfolio, post/[slug], 404, _app, _document, api)
 ├── components/           # UI 컴포넌트 (About, Header, Footer, Carousel, Comment, Element 등)
 ├── services/             # 데이터 접근 계층 (SanityService, GitProfileService)
-├── utils/                # 헬퍼 (Observer, Headings, LocalStorage 등)
+├── utils/                # 헬퍼 (Observer, Headings, LocalStorage, sanityApi 등)
 ├── styles/               # 전역 스타일 및 CSS Modules
 ├── fonts/ · assets/ · public/   # 폰트 · 정적 리소스
-├── next.config.js        # Next.js 설정 (env 매핑, transpilePackages)
+├── next.config.js        # Next.js 설정 (env 매핑, transpilePackages, /portpolio → /portfolio 리다이렉트)
 └── eslint.config.mjs     # ESLint flat config
-``
+```
+
+## 📝 변경 이력 — 2026.07.18 UI/UX · 안정성 개선
+
+오늘 세션에서 진행한 soft-light 톤 리프레시와 가독성·네비게이션 개선 요약입니다.
+
+### 비주얼 / 브랜드
+- soft-light 팔레트·CSS 토큰 정리 (`--muted-font-color`, elevated 배경 등)
+- 헤더 브랜드(`Dynamic_Kwon` + favicon 마크) 및 ABOUT ME 배치 조정
+- 푸터 개선: 브랜드·Posts/Career/Portfolio/GitHub 링크·저작권
+- About Me: 기술 스택 표시, 둥근 사각형 프로필 이미지, 닫기 버튼(전 구간)
+- 모바일: ABOUT ME를 메뉴 하단으로 이동
+
+### 네비게이션 / 라우팅
+- 푸터·페이지 전환 시 stale `menuType`/`post`로 인한 홈↔포트폴리오 교차 이동 루프 수정
+- Career/Portfolio 데이터 방어 코드 (`works`, `markdown` 등)
+- 모바일 메뉴 리디자인: 토글 버튼, 메뉴/카테고리 2열, 배경 유지 + 텍스트만 교체, 자연스러운 열림 애니메이션
+- 카테고리 패널 그라데이션 제거(단색)
+
+### 포스트 목록 / 상세(Slug)
+- 목록 날짜 `MM.DD` 표기
+- 모바일 리스트: 이미지 위 오버레이(날짜·제목·부제·미리보기)
+- 데스크톱 리스트 썸네일 120×120 정사각 정렬
+- 상세 히어로: 어두운 오버레이 위 타이틀/서브타이틀
+- 경로(브레드크럼) 글자 크기 축소
+- 마크다운 가독성: `react-markdown` + `remark-gfm` prose 타이포, 코드 언어 라벨, 줄간 조정
+- 댓글 입력 UI 패널/포커스/primary·secondary 버튼 정리
+
+### 데이터 / 인프라
+- 카테고리·서브카테고리 목록 `[0...5]` 하드 리밋 제거 → 전체 글 조회
+- Sanity 호출을 `/api/sanity/*`로 분리해 클라이언트 토큰 노출 완화
+- `/portpolio` → `/portfolio` 리다이렉트
+- Turbopack CSS 파싱 오류(`:global(> *)`) 수정
+
+### Sanity 경력 데이터
+- 경력기술서 기준 Sanity 복붙용 문서 정리 (`sanity_career_paste_NICE_UX개발실.md`)
+
+---
 
 ## 🔑 환경 변수
 

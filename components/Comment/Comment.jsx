@@ -5,7 +5,7 @@ const cx = classNames.bind(styles);
 import { Image } from "antd";
 import ReCommentList from "./ReCommentList";
 import { useCallback, useEffect, useState } from "react";
-import SanityService from "../../services/SanityService";
+import { fetchReComments } from "../../utils/sanityApi";
 import ReCommentInput from "./ReCommentInput";
 import {
   DownCircleOutlined,
@@ -21,9 +21,8 @@ export default function Comment({ comment, idx }) {
   const [recommentIndex, setRecommentIndex] = useState(0);
   const [showAddReComment, setShowAddReComment] = useState(false);
   const loadReComments = useCallback(async () => {
-    const sanityService = new SanityService();
     setReCommentLoading(true);
-    const result = await sanityService.getReCommentsById({
+    const result = await fetchReComments({
       id: comment._id,
       start: recommentIndex,
       end: recommentIndex + 5,
@@ -63,11 +62,11 @@ export default function Comment({ comment, idx }) {
           <Image
             className={cx("image")}
             src={`https://placedog.net/100/100/?id=${idx + 1}`}
-            alt={"randomDog"}
+            alt=""
             preview={false}
           />
         </div>
-        <div className={cx("cotentWrapper")}>
+        <div className={cx("commentBody")}>
           <div className={cx("commentName")}>
             {JSON.parse(comment.nickName)}
           </div>

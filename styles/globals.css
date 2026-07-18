@@ -6,14 +6,33 @@ body {
   /* font-family: Roboto sans-serif; */
   font-family: Roboto, Noto Sans KR, sans-serif;
   transition: width 0.5s;
-  user-select: none;
   scroll-behavior: smooth;
   overflow: auto;
   height: auto;
+  background-color: #e8ebef;
+  color: #2c333d;
 }
-html::-webkit-scrollbar {
-  display: none;
+
+:focus-visible {
+  outline: 2px solid #5c6b7a;
+  outline-offset: 2px;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body {
+    scroll-behavior: auto;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @font-face {
   unicode-range: U+AC00-D7A3, U+0030-0039;
   font-family: "Noto Sans KR";

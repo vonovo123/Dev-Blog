@@ -1,5 +1,4 @@
 import "antd/dist/reset.css";
-import "../styles/reset.css";
 import "../styles/globals.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -9,8 +8,11 @@ import { useRouter } from "next/router";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { UpCircleOutlined } from "@ant-design/icons";
-import SanityService from "../services/SanityService";
 import { setLocalData } from "../utils/LocalStorage";
+import {
+  fetchPostData as fetchSanityData,
+  fetchSubCategory,
+} from "../utils/sanityApi";
 import PostTitle from "../components/PostTitle";
 import makeObserver from "../utils/Observer";
 import Side from "../components/Side";
@@ -82,14 +84,18 @@ export default function MyApp({ Component, pageProps }) {
   }, []);
 
   const goPage = useCallback(() => {
+    if (!menuType) return;
     setPage(menuType);
     setLocalData("page", menuType);
-    if (menuType === "post") {
-      router.push({ pathname: `/` });
-    } else {
-      router.push({ pathname: `/${menuType}` });
-    }
-  });
+    const target =
+      menuType === "post"
+        ? "/"
+        : menuType === "portpolio"
+          ? "/portfolio"
+          : `/${menuType}`;
+    if (router.pathname === target) return;
+    router.push({ pathname: target });
+  }, [menuType, router]);
   const goMain = useCallback(() => {
     if (page === "post") {
       setCachedPath({ page, menu: "home", subMenu: "recent" });
@@ -116,13 +122,14 @@ export default function MyApp({ Component, pageProps }) {
       behavior: "smooth",
     });
     setLoading(true);
-    const sanityService = new SanityService();
     try {
-      const post = await sanityService.getData(param);
+      const post = await fetchSanityData(param);
       setPost(post);
-      setLoading(false);
     } catch (error) {
       console.log(error);
+      setPost([]);
+    } finally {
+      setLoading(false);
     }
   }, [page, menu, subMenu]);
 
@@ -148,6 +155,8 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if (!cachedPath) return;
     const { page, menu, subMenu } = cachedPath;
+    setPost(null);
+    setLoading(true);
     setPage(page);
     setMenu(menu);
     setTimeout(() => {
@@ -161,12 +170,16 @@ export default function MyApp({ Component, pageProps }) {
     if (!menu) return;
     setSubcategory(null);
     setSubMenu(null);
-    async function fetchSubCategory() {
-      const sanityService = new SanityService();
-      const subCategory = await sanityService.getSubCategory(menu);
-      setSubcategory(subCategory);
+    async function loadSubCategory() {
+      try {
+        const result = await fetchSubCategory(menu);
+        setSubcategory(result);
+      } catch (error) {
+        console.log(error);
+        setSubcategory([]);
+      }
     }
-    fetchSubCategory();
+    loadSubCategory();
   }, [menu]);
 
   useEffect(() => {
@@ -183,9 +196,11 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <div className={cx("app")}>
-      <div
+      <button
+        type="button"
         ref={upbtnRef}
         className={cx("upBtn", { hide: upBtnHide })}
+        aria-label="맨 위로"
         onClick={() => {
           window.scrollTo({
             top: 0,
@@ -194,16 +209,17 @@ export default function MyApp({ Component, pageProps }) {
         }}
       >
         <UpCircleOutlined />
-      </div>
+      </button>
       <div
         className={cx("about", { show: showAbout })}
         onClick={() => {
-          setShowAbout(!showAbout);
+          setShowAbout(false);
         }}
       >
         <About
           profile={pageProps.profile && pageProps.profile[0]}
           home={pageProps.home && pageProps.home[0]}
+          onClose={() => setShowAbout(false)}
         />
       </div>
       <div className={cx("appWrapper")}>
@@ -221,37 +237,41 @@ export default function MyApp({ Component, pageProps }) {
           ></Header>
         </div>
         <div className={cx("body")} ref={bodyRef}>
-          <div className={cx("content")}>
-            <div className={cx("titleWrapper")}>
-              <PostTitle postTitleState={postTitleState}></PostTitle>
+          <div className={cx("mainRow", { fullWidth: pageView !== "post" && pageView !== "slug" })}>
+            <div className={cx("content")}>
+              <div className={cx("titleWrapper")}>
+                <PostTitle postTitleState={postTitleState}></PostTitle>
+              </div>
+              {/* <AdTop></AdTop> */}
+              <Component
+                {...pageProps}
+                cachedPathState={cachedPathState}
+                pageState={pageState}
+                menuState={menuState}
+                menuTypeState={menuTypeState}
+                pageViewState={pageViewState}
+                subMenuState={subMenuState}
+                setMobileHeaderHide={setMobileHeaderHide}
+                postTitleState={postTitleState}
+                post={post}
+                loading={loading}
+                fetchPostData={fetchPostData}
+                goPage={goPage}
+                goSlug={goSlug}
+                home={pageProps.home && pageProps.home[0]}
+              />
             </div>
-            {/* <AdTop></AdTop> */}
-            <Component
-              {...pageProps}
-              cachedPathState={cachedPathState}
-              pageState={pageState}
-              menuState={menuState}
-              menuTypeState={menuTypeState}
-              pageViewState={pageViewState}
-              subMenuState={subMenuState}
-              setMobileHeaderHide={setMobileHeaderHide}
-              postTitleState={postTitleState}
-              post={post}
-              loading={loading}
-              fetchPostData={fetchPostData}
-              goPage={goPage}
-              goSlug={goSlug}
-              home={pageProps.home && pageProps.home[0]}
-            />
-          </div>
-          <div className={cx("side")}>
-            <Side
-              pageView={pageView}
-              categoryPost={pageProps.categoryPost}
-              popularPost={pageProps.popularPost}
-              recentComment={pageProps.recentComment}
-              goSlug={goSlug}
-            ></Side>
+            {(pageView === "post" || pageView === "slug") && (
+              <div className={cx("side")}>
+                <Side
+                  pageView={pageView}
+                  categoryPost={pageProps.categoryPost}
+                  popularPost={pageProps.popularPost}
+                  recentComment={pageProps.recentComment}
+                  goSlug={goSlug}
+                ></Side>
+              </div>
+            )}
           </div>
           {/* <AdBottom></AdBottom> */}
 
@@ -265,7 +285,7 @@ export default function MyApp({ Component, pageProps }) {
           </div>
         </div>
 
-        <div className={cx("footer", "mb50")}>
+        <div className={cx("footer")}>
           <Footer />
         </div>
       </div>

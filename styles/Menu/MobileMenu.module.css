@@ -1,46 +1,127 @@
 .menu {
-  height: 100%;
   width: 100%;
-  font-size: 16px;
+  height: auto;
+  font-size: 14px;
   font-weight: 500;
   overflow: hidden;
   display: flex;
-}
-.mainMenuWrapper {
-  width: 50%;
-  padding-top: 20px;
-  padding-left: 30px;
-  transition: all 0.5s;
-}
-.mainMenuWrapper.hide {
-  width: 100%;
-}
-.subMenuWrapper {
-  width: 50%;
-  padding-top: 20px;
-  padding-left: 30px;
-  background-color: var(--sel-box-color);
-  transition: all 0.5s;
-}
-.subMenuWrapper.hide {
-  width: 0%;
-}
-.nav {
-  width: 100%;
-  cursor: pointer;
-  transition: all 0.5s;
-  margin: 5px 0px;
-  margin-bottom: 10px;
-}
-.subMenu .nav {
-  color: white;
-}
-.menu .nav.sel > .text {
-  padding-bottom: 3px;
-  border-bottom: 1px solid black;
+  align-items: stretch;
+  background-color: transparent;
+  border-radius: 14px;
 }
 
-.subMenu .nav.sel > .text {
-  padding-bottom: 3px;
-  border-bottom: 1px solid white;
+.mainMenuWrapper {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 7.5rem;
+  padding: 10px 8px 10px 10px;
+  box-sizing: border-box;
+}
+
+.subMenuWrapper {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 10px 10px 10px 8px;
+  background-color: var(--background-colorA);
+  border-left: var(--border-width) solid var(--border-color);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.sectionLabel {
+  margin: 0 4px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-font-color);
+}
+
+.mainMenu,
+.subMenu {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+}
+
+.subMenu {
+  transition: opacity 0.2s ease;
+}
+.subMenu.empty {
+  opacity: 0.72;
+}
+
+.emptyText {
+  margin: 4px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-font-color);
+  line-height: 1.3;
+}
+
+.nav {
+  width: 100%;
+  max-width: 100%;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  margin: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: var(--secondary-font-color);
+  text-align: left;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.mainMenu .nav {
+  width: auto;
+  align-self: flex-start;
+}
+.nav:hover {
+  background: rgba(61, 79, 95, 0.08);
+  color: var(--font-color);
+}
+
+.menu .nav.sel {
+  background: var(--nav-dot-sel-color);
+  color: var(--background-elevated);
+}
+.menu .nav.sel > .text {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.subMenu .nav {
+  width: auto;
+  align-self: flex-start;
+  color: var(--secondary-font-color);
+}
+.subMenu .nav.sel {
+  background: var(--background-elevated);
+  color: var(--font-color);
+  box-shadow: 0 1px 4px rgba(44, 51, 61, 0.08);
+  border: var(--border-width) solid var(--border-color);
+}
+
+.aboutNav {
+  margin-top: 4px;
+  border-top: var(--border-width) solid var(--border-color);
+  border-radius: 8px;
+  padding-top: 10px;
+  color: var(--nav-dot-sel-color);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.aboutNav .text {
+  font-size: 12px;
+}
+.aboutNav:hover {
+  background: rgba(61, 79, 95, 0.1);
+  color: var(--font-color);
 }

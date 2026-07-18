@@ -1,0 +1,148 @@
+.footer {
+  width: 100%;
+  margin-top: 12px;
+  padding: 28px 4px 36px;
+  border-top: var(--border-width) solid var(--border-color);
+  background: linear-gradient(
+    180deg,
+    rgba(250, 251, 252, 0.35) 0%,
+    transparent 100%
+  );
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.mark {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-elevated);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(44, 51, 61, 0.06);
+  overflow: hidden;
+}
+
+.favicon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.brandName {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--font-color);
+}
+
+.brandAccent {
+  color: var(--nav-dot-sel-color);
+}
+
+.brandTag {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted-font-color);
+  line-height: 1.35;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 4px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  color: var(--secondary-font-color);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--font-color);
+  background-color: rgba(61, 79, 95, 0.08);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border-color);
+  flex-shrink: 0;
+}
+
+.copy {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--sub-font-color);
+  line-height: 1.4;
+}
+
+@media only screen and (min-width: 768px) {
+  .footer {
+    padding: 32px 4px 44px;
+  }
+
+  .inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .copy {
+    text-align: right;
+  }
+}

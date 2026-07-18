@@ -1,12 +1,11 @@
 import styles from "../../styles/Carousel/CarouselElement.module.css";
-import { Row, Col, Image } from "antd";
+import { Image } from "antd";
 import classNames from "classnames/bind";
-import { useRouter } from "next/router";
 const cx = classNames.bind(styles);
 export default function CarouselElement({ element, goPage }) {
-  const router = useRouter();
   return (
-    <div
+    <button
+      type="button"
       className={cx("elementWrapper")}
       onClick={() => {
         goPage({ def: "slug", slug: element.slug });
@@ -25,6 +24,6 @@ export default function CarouselElement({ element, goPage }) {
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 }

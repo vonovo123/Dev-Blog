@@ -1,64 +1,114 @@
-import { Col, Row } from "antd";
 import styles from "../styles/About.module.css";
 import classNames from "classnames/bind";
 import { Image } from "antd";
 import {
   EnvironmentOutlined,
   GithubOutlined,
-  MessageOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import BlogMarkDown from "./BlogMarkDown";
 
 const cx = classNames.bind(styles);
-export default function About({ profile, home }) {
+
+/** Sanity profile.skills가 없을 때 경력기술서 기준 기본값 */
+const DEFAULT_SKILLS = [
+  "Java",
+  "Spring / Spring Boot",
+  "Oracle SQL",
+  "HTML / CSS / SCSS",
+  "JavaScript / TypeScript",
+  "jQuery",
+  "Vue.js",
+  "React",
+];
+
+function resolveSkills(profile) {
+  const fromSanity = (profile?.skills || [])
+    .map((skill) => (typeof skill === "string" ? skill : skill?.name))
+    .filter(Boolean);
+  return fromSanity.length > 0 ? fromSanity : DEFAULT_SKILLS;
+}
+
+export default function About({ profile, onClose }) {
+  if (!profile) return null;
+
+  const skills = resolveSkills(profile);
+
   return (
-    profile && (
-      <div className={cx("about")}>
-        <div className={cx("profileWrapper")}>
-          <div className={cx("profileTitle")}>ABOUT ME</div>
-          <Row className={cx("profileContent")} align="middle" gutter={[24, 16]}>
-            <Col className={cx("profileDescImageWrapper")} xs={24} sm={8}>
-              <Image
-                src={profile.thumbnail.imageUrl}
-                alt={"profile_image"}
-                className={cx("profileDescImage")}
-                preview={false}
-              />
-            </Col>
-            <Col className={cx("profileBref")} xs={24} sm={16}>
-              <ul className={cx("infoList")}>
-                <li className={cx("profileDescInfoDetail")}>
-                  <TeamOutlined className={cx("icon")} />
-                  <span className={cx("text")}>{profile.company}</span>
-                </li>
-                <li className={cx("profileDescInfoDetail")}>
-                  <EnvironmentOutlined className={cx("icon")} />
-                  <span className={cx("text")}>{profile.location}</span>
-                </li>
-                <li className={cx("profileDescInfoDetail")}>
-                  <GithubOutlined className={cx("icon")} />
-                  <a
-                    href={profile.gitUrl}
-                    target={"_blank"}
-                    rel="noreferrer"
-                    className={cx("aTag", "text")}
-                  >
-                    {profile.gitUrl}
-                  </a>
-                </li>
-                <li className={cx("profileDescInfoDetail")}>
-                  <MessageOutlined className={cx("icon")} />
-                  <span className={cx("text")}>{profile.intro}</span>
-                </li>
-              </ul>
-            </Col>
-            {/* <Col span={24}>
-              <BlogMarkDown markdown={home.homeContent.markdown} />
-            </Col> */}
-          </Row>
+    <div
+      className={cx("about")}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
+      <div className={cx("profileWrapper")}>
+        <div className={cx("profileHeader")}>
+          <div className={cx("profileTitle")}>About Me</div>
+          <button
+            type="button"
+            className={cx("closeBtn")}
+            aria-label="About Me 닫기"
+            onClick={() => onClose?.()}
+          >
+            닫기
+          </button>
         </div>
+
+        <div className={cx("profileBody")}>
+          <div className={cx("profileDescImageWrapper")}>
+            <Image
+              src={profile.thumbnail.imageUrl}
+              alt={profile.thumbnail?.alt || "프로필 이미지"}
+              className={cx("profileDescImage")}
+              preview={false}
+            />
+          </div>
+
+          <div className={cx("profileBref")}>
+            <div className={cx("chipRow")}>
+              {profile.company && (
+                <span className={cx("chip")}>
+                  <TeamOutlined className={cx("chipIcon")} />
+                  {profile.company}
+                </span>
+              )}
+              {profile.location && (
+                <span className={cx("chip")}>
+                  <EnvironmentOutlined className={cx("chipIcon")} />
+                  {profile.location}
+                </span>
+              )}
+              {profile.gitUrl && (
+                <a
+                  href={profile.gitUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cx("chip", "chipLink")}
+                >
+                  <GithubOutlined className={cx("chipIcon")} />
+                  GitHub
+                </a>
+              )}
+            </div>
+
+            {profile.intro && (
+              <p className={cx("intro")}>{profile.intro}</p>
+            )}
+          </div>
+        </div>
+
+        {skills.length > 0 && (
+          <div className={cx("skillsSection")}>
+            <div className={cx("skillsTitle")}>기술 스택</div>
+            <div className={cx("skillsRow")}>
+              {skills.map((skill) => (
+                <span key={skill} className={cx("skillTag")}>
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-    )
+    </div>
   );
 }

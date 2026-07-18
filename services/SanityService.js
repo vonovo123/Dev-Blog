@@ -13,6 +13,12 @@ const profileUrl = `
   location,
   gitUrl,
   intro,
+  'skills': skills[]{
+    _type == 'reference' => @ -> {
+      name
+    },
+    _type != 'reference' => @
+  },
   'thumbnail' : {
     'alt' : thumbnail.alt,
     'imageUrl' : thumbnail.asset  -> url,
@@ -71,28 +77,61 @@ const postInnerUrl = `
     }
   }
 `;
+const postCardInnerUrl = `
+  _id,
+  title,
+  subtitle,
+  createdAt,
+  viewCount,
+  'preview': select(
+    defined(postContent.markdown) => postContent.markdown,
+    defined(blockContent) => pt::text(blockContent),
+    ""
+  ),
+  'category' : category -> {
+    name,
+    type,
+    slug
+  },
+  'subCategory' : subCategory -> {
+    name,
+    type
+  },
+  'slug': slug.current,
+  'thumbnail' : {
+    'alt' : thumbnail.alt,
+    'imageUrl' : thumbnail.asset  -> url,
+  },
+  'author' : author -> {
+    name
+  }
+`;
 const postAllUrl = `
 *[_type == 'post']  | order(createdAt desc){
   ${postInnerUrl}
 }`;
 const postRecentUrl = `
 *[_type == 'post']  | order(createdAt desc){
-  ${postInnerUrl}
+  ${postCardInnerUrl}
 }[0...10]`;
 
 const postPopularUrl = `
 *[_type == 'post']  | order(viewCount desc){
-  ${postInnerUrl}
+  ${postCardInnerUrl}
 }[0...5]`;
 
 const postByCategoryUrl = `
 *[_type == 'post' && references(*[_type=="category" && slug == $category]._id)] | order(createdAt desc){
-  ${postInnerUrl}
-}[0...5]`;
+  ${postCardInnerUrl}
+}`;
 const postByCategoryAndSubCategoryUrl = `
 *[_type == 'post' && references(*[_type=="category" && slug == $category]._id)&& references(*[_type=="subCategory" && type == $subCategory]._id)] | order(createdAt desc){
+  ${postCardInnerUrl}
+}`;
+const postByCategoryAndSubCategoryFullUrl = `
+*[_type == 'post' && references(*[_type=="category" && slug == $category]._id)&& references(*[_type=="subCategory" && type == $subCategory]._id)] | order(createdAt desc){
   ${postInnerUrl}
-}[0...5]`;
+}`;
 const postBySlug = `
 *[_type == 'post' && slug.current == $slug]{
   ${postInnerUrl}
@@ -195,35 +234,54 @@ export default class SanityService {
     const result = await this._client.fetch(postBySlug, { slug });
     return result[0];
   }
-  async getData({ type, category, subCategory }) {
+  async getData({ type, category, subCategory, light = false }) {
     if (!type) return [];
+    let result = [];
     if (type === "post") {
       if (!category) {
-        return await this._client.fetch(postAllUrl);
+        result = await this._client.fetch(postAllUrl);
       } else if (category === "home") {
-        const result = await this._client.fetch(postRecentUrl);
-        return result;
+        result = await this._client.fetch(postRecentUrl);
       } else {
         if (!subCategory) {
-          return await this._client.fetch(postByCategoryUrl, {
+          result = await this._client.fetch(postByCategoryUrl, {
             category,
           });
         } else {
-          return await this._client.fetch(postByCategoryAndSubCategoryUrl, {
+          const query = light
+            ? postByCategoryAndSubCategoryUrl
+            : postByCategoryAndSubCategoryFullUrl;
+          result = await this._client.fetch(query, {
             category,
             subCategory,
           });
         }
       }
     } else if (type === "portpolio") {
-      return await this._client.fetch(portpolioUrl, { subCategory });
+      result = await this._client.fetch(portpolioUrl, { subCategory });
     } else if (type === "career") {
-      return await this._client.fetch(careerUrl);
+      result = await this._client.fetch(careerUrl);
     } else if (type === "popular") {
-      return await this._client.fetch(postPopularUrl);
+      result = await this._client.fetch(postPopularUrl);
     } else {
       return [];
     }
+
+    // 목록용 쿼리는 미리보기만 짧게 남긴다 (본문 전체 전송 방지)
+    if (light || type === "popular" || (type === "post" && category)) {
+      return (result || []).map((item) => {
+        if (!item?.preview) return item;
+        const normalized = String(item.preview).replace(/\s+/g, " ").trim();
+        return {
+          ...item,
+          preview:
+            normalized.length > 180
+              ? `${normalized.slice(0, 180).trim()}…`
+              : normalized,
+        };
+      });
+    }
+    return result;
   }
   async getPortpolio(subCategory) {
     return await this._client.fetch(portpolioUrl, { subCategory });

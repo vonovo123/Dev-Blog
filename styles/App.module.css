@@ -20,30 +20,45 @@
 .hide {
   display: none;
 }
-.soc {
-  background-color: red;
-  height: 100px;
-}
 .app {
-  --background-colorA: #ffffff;
-  --background-colorB: #f7e0e0;
-  --background-color-about: #cfcfcf;
-  --background-color-about-btn: #e4a4a4;
-  --sel-box-color: rgb(230, 230, 230);
-  --tag-color: #83878c;
-  --tag-font-color: #ffffff;
-  --border-color: #e0e0e0;
-  --font-color: #191f28;
-  --sub-font-color: #cacaca;
-  --sel-font-color: #191f28;
-  --nav-dot-color: #83878c;
-  --nav-dot-sel-color: #34495e;
-  --nav-dot-last-color: #ffbc49;
-  --toc-color: #83878c;
-  --toc-read-color: #34495e;
+  --background-page: #e8ebef;
+  --background-colorA: #f4f6f8;
+  --background-colorB: #dde5ee;
+  --background-color: #f4f6f8;
+  --background-elevated: #fafbfc;
+  --background-color-about: #c5ced8;
+  --background-color-about-btn: #5c6b7a;
+  --sel-box-color: #d5dde6;
+  --tag-color: #6b7582;
+  --tag-font-color: #f4f6f8;
+  --border-color: #cfd6de;
+  --font-color: #2c333d;
+  --sub-font-color: #9aa3ad;
+  --muted-font-color: #6b7582;
+  --secondary-font-color: #4a5562;
+  --disabled-color: #9aa3ad;
+  --sel-font-color: #2c333d;
+  --nav-dot-color: #8b949e;
+  --nav-dot-sel-color: #3d4f5f;
+  --nav-dot-last-color: #c4a35a;
+  --toc-color: #5a6570;
+  --toc-read-color: #334155;
   --border-width: 1px;
-  background-color: var(--background-colorA);
+  --focus-ring: #5c6b7a;
+  background-color: var(--background-page);
   color: var(--font-color);
+  background-image: radial-gradient(
+      ellipse 90% 55% at 100% -10%,
+      rgba(180, 198, 214, 0.35),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 70% 45% at 0% 0%,
+      rgba(92, 107, 122, 0.08),
+      transparent 52%
+    ),
+    linear-gradient(180deg, #eef1f4 0%, #e8ebef 40%, #e4e8ed 100%);
+  min-height: 100vh;
 }
 .appWrapper {
   margin: 0px auto;
@@ -56,42 +71,72 @@
   width: 50px;
   height: 50px;
   font-size: 30px;
-  color: white;
-  background-color: black;
+  color: var(--background-elevated);
+  background-color: var(--nav-dot-sel-color);
   right: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.5s;
   opacity: 1;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(44, 51, 61, 0.18);
 }
 .upBtn.hide {
   opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+.side {
+  display: none;
 }
 .about {
   position: fixed;
   bottom: -550px;
-  right: 0px;
+  right: 16px;
   z-index: 2;
-  transition: all 1s;
+  transition: bottom 0.45s ease, opacity 0.45s ease;
+  width: min(420px, calc(100vw - 32px));
+  max-height: min(78vh, 520px);
+  overflow: auto;
+  pointer-events: none;
+  opacity: 0;
 }
 .about.show {
-  bottom: 0px;
+  bottom: 20px;
+  pointer-events: auto;
+  opacity: 1;
 }
 .about.hide {
-  top: 100vh;
+  top: auto;
+  bottom: -550px;
+  opacity: 0;
+  pointer-events: none;
 }
 .header {
   width: 100%;
-  background-color: var(--background-colorA);
-  padding-bottom: 30px;
+  background-color: transparent;
+  padding-bottom: 20px;
 }
 
 .body {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainRow {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
 }
 
 .content {
-  min-height: 100vh;
+  min-height: 0;
+  width: 100%;
 }
 
 .ad {
@@ -110,11 +155,14 @@
 }
 
 .footer {
-  min-height: 50px;
+  width: 100%;
 }
 .titleWrapper {
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
 }
 @media only screen and (min-width: 768px) {
   .appWrapper {
@@ -129,24 +177,36 @@
     padding: 0px 30px;
   }
   .header {
-    padding-bottom: 60px;
+    padding-bottom: 36px;
   }
-  .body {
-    display: flex;
-    flex-wrap: wrap;
+  .mainRow {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+  }
+  .mainRow.fullWidth .content {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
   }
   .content {
-    width: 75%;
-    padding-right: 30px;
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    padding-right: 0;
   }
   .banner {
-    width: 75%;
-    padding-right: 30px;
+    width: 100%;
+    padding-right: 0;
   }
   .side {
+    display: block;
+    flex: 0 0 25%;
     width: 25%;
+    max-width: 280px;
+    padding-top: 0;
   }
   .about {
-    width: 30%;
+    width: min(420px, 30%);
   }
 }

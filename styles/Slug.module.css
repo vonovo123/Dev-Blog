@@ -14,9 +14,6 @@
   margin-bottom: 40px;
 }
 
-.mb50 {
-  margin-bottom: 100px;
-}
 .ad {
   background-color: var(--border-color);
   width: 100%;
@@ -37,61 +34,106 @@
 .tocFold {
   display: none;
 }
+
+.postWrapper {
+  width: 100%;
+}
+
 .post {
   margin-bottom: 10px;
 }
+
+/* —— 헤더 —— */
 .contentHeaderWrapper {
-  height: 100%;
-  margin-top: 50px;
-  margin-bottom: 50px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.sod,
-.eod {
-  height: 50px;
-}
-.postImageWrapper {
-  margin-bottom: 30px;
-}
-.postImage {
-  height: 250px;
-}
-/* 위 클래스도 antd 6의 .ant-image-img 주입 스타일에 덮이므로, 래퍼 기준으로 강제한다. */
-.postImageWrapper :global(.ant-image) img {
-  height: 250px;
-  width: auto;
-}
-.contentHeaderInfo {
   width: 100%;
-  font-weight: bold;
-  text-align: center;
+  max-width: 680px;
+  margin: 12px auto 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
 }
+
+.postImageWrapper {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  margin: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: var(--border-width) solid var(--border-color);
+  background: var(--background-elevated);
+  box-shadow: 0 4px 16px rgba(44, 51, 61, 0.06);
+}
+
+.postImageWrapper :global(.ant-image) {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.postImageWrapper :global(.ant-image) img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.postImageOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(28, 34, 42, 0.28) 0%,
+    rgba(28, 34, 42, 0.45) 45%,
+    rgba(28, 34, 42, 0.72) 100%
+  );
+}
+
+.contentHeaderInfo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 100%;
+  padding: 28px 24px 24px;
+  text-align: left;
+}
+
 .contentHeaderInfo .title {
-  font-size: 30px;
+  margin: 0 0 8px;
+  font-size: clamp(1.55rem, 2.4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  color: #f7f8fa;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .contentHeaderInfo .subTitle {
-  font-size: 20px;
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(247, 248, 250, 0.88);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
-.contentBody {
-  margin-bottom: 100px;
-}
+
 .contentAuthor {
   width: 100%;
   display: flex;
-  font-weight: bold;
-  margin-bottom: 50px;
-  color: grey;
-  justify-content: center;
+  margin: 0;
+  color: var(--muted-font-color);
+  justify-content: flex-start;
 }
+
 .authorImage {
   border-radius: 10px;
 }
-/* antd 6 <Image>는 .ant-image 래퍼와 .ant-image-img{width:100%;height:auto}를 주입해
-   <img>에 직접 준 클래스 크기를 덮어쓴다. 래퍼(.ant-image) 기준 선택자로 우선순위를
-   높여 40x40 아바타 크기를 강제한다. */
+
 .authorInfo :global(.ant-image) {
   width: 40px;
   height: 40px;
@@ -111,6 +153,279 @@
 .editInfo {
   text-align: left;
 }
+.createdAt,
+.authorName {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* —— 본문 —— */
+.contentBody {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto 80px;
+  padding: 32px 28px 40px;
+  border-radius: 14px;
+  background: var(--background-elevated);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: 0 2px 12px rgba(44, 51, 61, 0.04);
+}
+
+.prose {
+  font-size: 1.125rem;
+  line-height: 1.68;
+  letter-spacing: -0.01em;
+  color: var(--font-color);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.prose > :global(*:first-child) {
+  margin-top: 0;
+}
+
+.prose > :global(*:last-child) {
+  margin-bottom: 0;
+}
+
+.prose :global(h1),
+.prose :global(h2),
+.prose :global(h3),
+.prose :global(h4) {
+  color: var(--font-color);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+  margin: 2.1em 0 0.75em;
+  scroll-margin-top: 88px;
+}
+
+.prose :global(h1) {
+  font-size: 1.7rem;
+}
+.prose :global(h2) {
+  font-size: 1.4rem;
+  padding-bottom: 0.4em;
+  border-bottom: var(--border-width) solid var(--border-color);
+}
+.prose :global(h3) {
+  font-size: 1.2rem;
+  margin-top: 1.75em;
+}
+.prose :global(h4) {
+  font-size: 1.05rem;
+  color: var(--secondary-font-color);
+}
+
+.prose :global(p) {
+  margin: 0 0 1em;
+  color: var(--secondary-font-color);
+}
+
+.prose :global(a) {
+  color: var(--nav-dot-sel-color);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.prose :global(a:hover) {
+  color: var(--font-color);
+}
+
+.prose :global(strong) {
+  color: var(--font-color);
+  font-weight: 700;
+}
+
+.prose :global(ul),
+.prose :global(ol) {
+  margin: 0 0 1.25em;
+  padding-left: 1.45em;
+  color: var(--secondary-font-color);
+}
+
+.prose :global(ul) {
+  list-style-type: disc;
+}
+
+.prose :global(ol) {
+  list-style-type: decimal;
+}
+
+.prose :global(li) {
+  margin: 0.45em 0;
+  padding-left: 0.15em;
+}
+
+.prose :global(li::marker) {
+  color: var(--muted-font-color);
+}
+
+.prose :global(li > p) {
+  margin: 0.4em 0;
+}
+
+.prose :global(li > ul),
+.prose :global(li > ol) {
+  margin: 0.4em 0 0.5em;
+}
+
+.prose :global(blockquote) {
+  margin: 1.5em 0;
+  padding: 0.95em 1.1em;
+  border-left: 3px solid var(--nav-dot-sel-color);
+  background: var(--background-colorA);
+  border-radius: 0 10px 10px 0;
+  color: var(--muted-font-color);
+  font-size: 0.98em;
+}
+
+.prose :global(blockquote p) {
+  margin: 0;
+  color: inherit;
+}
+
+.prose :global(blockquote p + p) {
+  margin-top: 0.75em;
+}
+
+.prose :global(hr) {
+  margin: 2.4em 0;
+  border: none;
+  border-top: var(--border-width) solid var(--border-color);
+}
+
+.prose :global(img) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.6em auto;
+  border-radius: 12px;
+  border: var(--border-width) solid var(--border-color);
+}
+
+.prose :global(code) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  padding: 0.18em 0.45em;
+  border-radius: 6px;
+  background: var(--sel-box-color);
+  color: var(--font-color);
+  letter-spacing: 0;
+  word-break: break-word;
+}
+
+.prose :global(pre code) {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.5em 0;
+  border-radius: 10px;
+  border: var(--border-width) solid var(--border-color);
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose :global(table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.prose :global(th),
+.prose :global(td) {
+  padding: 0.7em 0.9em;
+  border-bottom: var(--border-width) solid var(--border-color);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose :global(th) {
+  background: var(--background-colorA);
+  color: var(--font-color);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.prose :global(tr:last-child td) {
+  border-bottom: none;
+}
+
+.prose :global(tr:nth-child(even) td) {
+  background: rgba(244, 246, 248, 0.55);
+}
+
+.codeBlock {
+  margin: 1.5em 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: var(--border-width) solid var(--border-color);
+  background: #f3f5f7;
+}
+
+.codeBlockHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: var(--border-width) solid var(--border-color);
+  background: #eef1f4;
+}
+
+.codeLang {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-font-color);
+}
+
+.codeBlock :global(pre),
+.codeBlock :global(div) {
+  margin: 0 !important;
+}
+
+.codeBlockBody {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.em {
+  color: #9a6b16;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.img-wrapper {
+  margin: 1.4em 0;
+  padding: 0;
+}
+
+.img-wrapper img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: var(--border-width) solid var(--border-color);
+}
+
+.img-caption {
+  margin: 0 0 0.6em;
+  font-size: 0.9em;
+  color: var(--muted-font-color);
+  font-weight: 500;
+}
+
 .loading {
   width: 100%;
   height: 80px;
@@ -130,25 +445,46 @@
 .commentList {
 }
 .commentTitle {
-  font-size: 25px;
-  margin-bottom: 30px;
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--font-color);
 }
 
 .commentInput {
-  margin-bottom: 30px;
+  margin-bottom: 28px;
 }
 
-.em {
-  color: orange;
-  font-style: normal;
+.comment {
+  max-width: 680px;
+  margin: 0 auto;
 }
-.img-wrapper {
-  margin-bottom: 20px;
-  margin-top: 20px;
-  padding: 10px;
-}
-.img-caption {
-  margin-bottom: 20px;
+
+@media only screen and (max-width: 767px) {
+  .contentHeaderWrapper {
+    margin: 4px auto 28px;
+    gap: 12px;
+  }
+
+  .postImageWrapper :global(.ant-image) img {
+    height: 220px;
+  }
+
+  .contentHeaderInfo {
+    padding: 22px 16px 18px;
+  }
+
+  .contentBody {
+    padding: 22px 16px 28px;
+    margin-bottom: 56px;
+    border-radius: 12px;
+  }
+
+  .prose {
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
 }
 
 @media only screen and (min-width: 1025px) {
@@ -160,7 +496,7 @@
     top: 0;
     height: 100%;
     color: var(--toc-color);
-    background-color: var(--background-colorA);
+    background-color: var(--background-elevated);
     font-weight: bold;
     z-index: 3;
     border: var(--border-width) solid var(--border-color);
@@ -179,7 +515,7 @@
     color: var(--toc-read-color);
     font-size: 20px;
     align-items: center;
-    background-color: var(--background-colorA);
+    background-color: var(--background-elevated);
     font-weight: bold;
     z-index: 3;
     border: var(--border-width) solid var(--border-color);

@@ -1,12 +1,14 @@
 .recentPosts {
+  margin-top: 48px;
+  padding-top: 8px;
 }
 .title {
-  padding: 10px;
-
+  padding: 4px 4px 0;
   font-size: 20px;
   font-weight: bold;
-  border-bottom: var(--border-width) solid var(--border-color);
+  border-bottom: none;
+  color: var(--font-color);
 }
 .carouselWrapper {
-  margin-top: 50px;
+  margin-top: 20px;
 }

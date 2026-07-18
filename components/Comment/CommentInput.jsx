@@ -1,86 +1,146 @@
 import styles from "../../styles/Comment.module.css";
 import classNames from "classnames/bind";
-import { useCallback, useEffect, useState } from "react";
-import SanityService from "../../services/SanityService";
+import { useCallback, useState } from "react";
+import { createComment } from "../../utils/sanityApi";
 const cx = classNames.bind(styles);
+
 export default function CommentInput({ postInfo, commentTotalListState }) {
   const { id, slug, title } = postInfo;
   const [nickName, setNickName] = useState("");
   const [comment, setComment] = useState("");
   const [error, setError] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const [commentTotalList, setCommentTotalList] = commentTotalListState;
+
   const makeReview = useCallback(async () => {
     if (nickName === "") {
       setError("nickName");
       return;
-    } else if (comment === "") {
+    }
+    if (comment === "") {
       setError("comment");
       return;
     }
-    const sanityService = new SanityService();
-    const now = new Date();
-    const result = await sanityService.setComment({
-      id,
-      slug,
-      title,
-      nickName: JSON.stringify(nickName),
-      comment: JSON.stringify(comment),
-      createdAt: new Date(now.getTime()).toISOString(),
-    });
-    setCommentTotalList([result, ...commentTotalList]);
-    setNickName("");
-    setComment("");
-  }, [nickName, comment]);
+    try {
+      setSubmitting(true);
+      setSubmitError(null);
+      const now = new Date();
+      const result = await createComment({
+        id,
+        slug,
+        title,
+        nickName: JSON.stringify(nickName),
+        comment: JSON.stringify(comment),
+        createdAt: new Date(now.getTime()).toISOString(),
+      });
+      setCommentTotalList([result, ...(commentTotalList || [])]);
+      setNickName("");
+      setComment("");
+      setError(null);
+    } catch (e) {
+      setSubmitError("댓글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [
+    nickName,
+    comment,
+    commentTotalList,
+    id,
+    slug,
+    title,
+    setCommentTotalList,
+  ]);
+
   return (
     <div className={cx("commentInput")}>
-      <div className={cx("contentWrapper")}>
-        <div className={cx("contentInnerWrapper")}>
-          <div className={cx("lengthCount")}>{`${nickName.length} / 20`}</div>
+      <div className={cx("formPanel")}>
+        <div className={cx("field")}>
+          <div className={cx("fieldHeader")}>
+            <label className={cx("fieldLabel")} htmlFor="nickNameInput">
+              닉네임
+            </label>
+            <span className={cx("lengthCount")}>{nickName.length} / 20</span>
+          </div>
           <input
-            id={"nickNameInput"}
+            id="nickNameInput"
             className={cx("nickNameInput", { error: error === "nickName" })}
             onChange={(e) => {
               if (e.target.value.length > 20) return;
+              setError(null);
               setNickName(e.target.value);
             }}
             value={nickName}
             type="text"
-            placeholder={"닉네임"}
+            placeholder="닉네임을 입력하세요"
+            autoComplete="nickname"
+            aria-invalid={error === "nickName"}
+            aria-describedby={error === "nickName" ? "nickNameError" : undefined}
           />
+          {error === "nickName" && (
+            <p id="nickNameError" className={cx("errorMsg")} role="alert">
+              닉네임을 입력해 주세요.
+            </p>
+          )}
         </div>
-        <div className={cx("contentInnerWrapper")}>
-          <div className={cx("lengthCount")}>{`${comment.length} / 300`}</div>
+
+        <div className={cx("field")}>
+          <div className={cx("fieldHeader")}>
+            <label className={cx("fieldLabel")} htmlFor="commentInputTxt">
+              댓글
+            </label>
+            <span className={cx("lengthCount")}>{comment.length} / 300</span>
+          </div>
           <textarea
-            id={"commentInputTxt"}
+            id="commentInputTxt"
             className={cx("commentInputTxt", { error: error === "comment" })}
             onChange={(e) => {
               if (e.target.value.length > 300) return;
+              setError(null);
               setComment(e.target.value);
             }}
-            placeholder={"코멘트"}
+            placeholder="의견을 남겨 주세요"
             value={comment}
-          ></textarea>
+            rows={4}
+            aria-invalid={error === "comment"}
+            aria-describedby={error === "comment" ? "commentError" : undefined}
+          />
+          {error === "comment" && (
+            <p id="commentError" className={cx("errorMsg")} role="alert">
+              댓글을 입력해 주세요.
+            </p>
+          )}
         </div>
-      </div>
-      <div className={cx("btnWrapper")}>
-        <div className={cx("btnInnerWrapper")}>
+
+        {submitError && (
+          <p className={cx("errorMsg")} role="alert">
+            {submitError}
+          </p>
+        )}
+
+        <div className={cx("btnWrapper")}>
           <button
-            className={cx("commentSubmitBtn")}
-            onClick={() => {
-              makeReview();
-            }}
-          >
-            {"등록"}
-          </button>
-          <button
-            className={cx("commentSubmitBtn")}
+            type="button"
+            className={cx("commentSubmitBtn", "secondary")}
             onClick={() => {
               setNickName("");
               setComment("");
               setError(null);
+              setSubmitError(null);
             }}
           >
-            {"지우기"}
+            지우기
+          </button>
+          <button
+            type="button"
+            className={cx("commentSubmitBtn", "primary")}
+            disabled={submitting}
+            onClick={() => {
+              makeReview();
+            }}
+          >
+            {submitting ? "등록 중…" : "등록"}
           </button>
         </div>
       </div>

@@ -13,6 +13,7 @@ import CommentList from "../../components/Comment/CommentList";
 import observeBottomOf from "../../utils/ObserveBottomOf";
 import HeadMeta from "../../components/HeadMeta";
 import BlogBlockContent from "../../components/BlogBlockContent";
+import { fetchComments } from "../../utils/sanityApi";
 import classNames from "classnames/bind";
 const cx = classNames.bind(styles);
 export default function Post({
@@ -46,19 +47,24 @@ export default function Post({
 
   const loadNextComments = useCallback(
     async (id, start, end) => {
-      const sanityService = new SanityService();
       setLoading(true);
-      const result = await sanityService.getCommentsById({
-        id,
-        start,
-        end,
-      });
-      setLoading(false);
-      setCommentList([...result]);
-      if (result.length === 0) {
+      try {
+        const result = await fetchComments({
+          id,
+          start,
+          end,
+        });
+        setCommentList([...result]);
+        if (result.length === 0) {
+          return null;
+        }
+        return result;
+      } catch (error) {
+        console.log(error);
         return null;
+      } finally {
+        setLoading(false);
       }
-      return result;
     },
     [content]
   );
@@ -190,29 +196,28 @@ export default function Post({
                     className={cx("postImage")}
                     preview={false}
                   />
-                </div>
-                <div className={cx("contentHeaderInfo")}>
-                  <div className={cx("mb30")}>
-                    <div className={cx("title", "mb20")}>{content.title}</div>
-                    <div className={cx("subTitle", "mb20")}>
-                      {content.subtitle}
-                    </div>
+                  <div className={cx("postImageOverlay")} aria-hidden="true" />
+                  <div className={cx("contentHeaderInfo")}>
+                    <h1 className={cx("title")}>{content.title}</h1>
+                    {content.subtitle && (
+                      <p className={cx("subTitle")}>{content.subtitle}</p>
+                    )}
                   </div>
-                  <div className={cx("contentAuthor")}>
-                    <div className={cx("authorInfo")}>
-                      <Image
-                        src={content.author.image}
-                        alt={content.author.name}
-                        className={cx("authorImage")}
-                        preview={false}
-                      />
-                      <div className={cx("editInfo")}>
-                        <div className={cx("createdAt")}>
-                          {dayjs(content.createdAt).format("MMMM DD / YYYY ")}
-                        </div>
-                        <div
-                          className={cx("authorName")}
-                        >{`posted by ${content.author.name}`}</div>
+                </div>
+                <div className={cx("contentAuthor")}>
+                  <div className={cx("authorInfo")}>
+                    <Image
+                      src={content.author.image}
+                      alt={content.author.name}
+                      className={cx("authorImage")}
+                      preview={false}
+                    />
+                    <div className={cx("editInfo")}>
+                      <div className={cx("createdAt")}>
+                        {dayjs(content.createdAt).format("MMMM DD / YYYY")}
+                      </div>
+                      <div className={cx("authorName")}>
+                        posted by {content.author.name}
                       </div>
                     </div>
                   </div>
