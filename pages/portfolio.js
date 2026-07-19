@@ -30,10 +30,14 @@ export default function PortfolioPage({
     // page만 portpolio이고 path는 home/recent인 경우가 있어 menu까지 검증
     if (!page || page !== PAGE_TYPE) {
       page = PAGE_TYPE;
-      path = { menu: "portpolio", subMenu: "htmlCss" };
+      path = { menu: "portpolio", subMenu: null };
     }
-    if (!path || path.menu !== "portpolio" || !path.subMenu) {
-      path = { menu: "portpolio", subMenu: "htmlCss" };
+    if (!path || path.menu !== "portpolio") {
+      path = { menu: "portpolio", subMenu: null };
+    }
+    // 예전 기본값 htmlCss 등 존재하지 않는 타입은 로드 시 첫 항목으로 보정
+    if (path.subMenu === "htmlCss") {
+      path = { ...path, subMenu: null };
     }
 
     setMenuType(PAGE_TYPE);

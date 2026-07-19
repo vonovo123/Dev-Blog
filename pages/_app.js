@@ -65,6 +65,8 @@ export default function MyApp({ Component, pageProps }) {
   //포스팅 리스트
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(null);
+  // cachedPath 복원 시 적용할 하위메뉴 (없으면 첫 번째 카테고리로 보정)
+  const pendingSubMenuRef = useRef(undefined);
   const initState = useCallback(() => {
     setPage(null);
     setMenuType(null);
@@ -107,10 +109,11 @@ export default function MyApp({ Component, pageProps }) {
           : { menu: "home", subMenu: "recent" };
     } else if (menuType === "portpolio") {
       const stayingOnPortfolio = router.pathname === "/portfolio";
+      // subMenu는 실제 Sanity 타입(js/react/vue 등)만 유지. 없으면 로드 시 첫 항목으로 보정
       nextPath =
         stayingOnPortfolio && menu === "portpolio" && subMenu
           ? { menu: "portpolio", subMenu }
-          : { menu: "portpolio", subMenu: "htmlCss" };
+          : { menu: "portpolio", subMenu: null };
     } else if (menuType === "career") {
       nextPath = { menu: "career", subMenu: "career" };
     }
@@ -179,46 +182,69 @@ export default function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     if (!cachedPath) return;
-    const { page, menu, subMenu } = cachedPath;
+    const { page, menu: pathMenu, subMenu: pathSubMenu } = cachedPath;
     setPost(null);
     setLoading(true);
     setPage(page);
-    setMenu(menu);
-    const timer = setTimeout(() => {
-      setSubMenu(subMenu);
-    }, 1000);
+    // null도 "복원 요청"으로 취급 → 로드 후 첫 하위메뉴로 보정
+    pendingSubMenuRef.current = pathSubMenu ?? null;
     setLocalData("page", page);
-    setLocalData("path", { menu, subMenu });
-    return () => clearTimeout(timer);
+    setLocalData("path", { menu: pathMenu, subMenu: pathSubMenu });
+
+    setMenu((prev) => {
+      if (prev === pathMenu) {
+        // 동일 메뉴면 effect가 스킵되므로 한 번 비웠다가 다시 설정
+        queueMicrotask(() => setMenu(pathMenu));
+        return null;
+      }
+      return pathMenu;
+    });
   }, [cachedPath]);
 
   useEffect(() => {
     if (!menu) return;
     setSubcategory(null);
     setSubMenu(null);
+    let cancelled = false;
     async function loadSubCategory() {
       try {
         const result = await fetchSubCategory(menu);
-        setSubcategory(result);
+        if (cancelled) return;
+        setSubcategory(result || []);
+        // cachedPath 복원 중이면 유효한 subMenu(또는 첫 항목)로 설정
+        if (pendingSubMenuRef.current !== undefined) {
+          const preferred = pendingSubMenuRef.current;
+          pendingSubMenuRef.current = undefined;
+          const matched = (result || []).find((cat) => cat.type === preferred);
+          const next = matched?.type ?? result?.[0]?.type ?? null;
+          if (next) setSubMenu(next);
+        }
       } catch (error) {
         console.log(error);
-        setSubcategory([]);
+        if (!cancelled) {
+          setSubcategory([]);
+          pendingSubMenuRef.current = undefined;
+        }
       }
     }
     loadSubCategory();
+    return () => {
+      cancelled = true;
+    };
   }, [menu]);
 
   useEffect(() => {
     if (!subMenu) return;
     setPostTitle(null);
     if (category && subCategory) {
-      const main = category.find((cat) => cat.slug === menu).name;
-      const sub = subCategory.find((cat) => cat.type === subMenu).name;
-      const newTitle = { main, sub };
-      setPostTitle(newTitle);
+      const main = category.find((cat) => cat.slug === menu)?.name;
+      const sub = subCategory.find((cat) => cat.type === subMenu)?.name;
+      if (main && sub) {
+        setPostTitle({ main, sub });
+      }
     }
     setLocalData("path", { menu, subMenu });
-  }, [subMenu]);
+  }, [subMenu, category, subCategory, menu]);
 
   return (
     <div className={cx("app")}>
