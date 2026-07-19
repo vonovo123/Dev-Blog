@@ -1,118 +1,214 @@
 .element {
   width: 100%;
-  border-bottom: var(--border-width) solid var(--border-color);
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-  padding-top: 30px;
+  margin-bottom: 20px;
+  padding: 0;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 14px;
+  background: var(--background-elevated);
+  box-shadow: 0 2px 12px rgba(44, 51, 61, 0.04);
+  overflow: hidden;
 }
+
 .elementInnerWrapper {
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
+
 .elementImageWrapper {
   width: 100%;
-  display: flex;
-  margin-bottom: 30px;
-  justify-content: center;
-  align-items: center;
+  display: block;
+  background: var(--background-colorA);
+  border-bottom: var(--border-width) solid var(--border-color);
 }
-/* antd 6 <Image> injects `.ant-image .ant-image-img { width:100%; height:auto }`,
-   which outranks a plain class on the <img>. Force a fixed, cropped box via a
-   wrapper-scoped selector. */
+
 .elementImageWrapper :global(.ant-image) {
+  display: block;
   width: 100%;
-  height: 300px;
+  height: 220px;
 }
+
 .elementImageWrapper :global(.ant-image) img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+.imageFallback {
+  width: 100%;
+  height: 220px;
+  background: var(--background-colorA);
 }
 
 .elementContentWrapper {
   width: 100%;
-  padding: 0px 30px;
+  padding: 18px 18px 16px;
+  box-sizing: border-box;
 }
 
 .title {
-  font-size: 15px;
-  font-weight: bold;
-  border-bottom: var(--border-width) solid var(--border-color);
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-}
-
-.content {
-  padding: 10px;
-  border-bottom: var(--border-width) solid var(--border-color);
-  margin-bottom: 20px;
-  min-height: 300px;
-}
-.btnWrapper {
-  font-weight: bold;
-  display: flex;
-  width: 100%;
-  flex-wrap: wrap;
-  text-align: center;
-  gap: 8px;
-}
-.btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  border: var(--border-width) solid var(--border-color);
-  border-radius: 6px;
-  color: inherit;
-  text-decoration: none;
-  box-sizing: border-box;
-  background-color: var(--background-elevated);
-  transition: background-color 0.2s ease;
-}
-.btn:hover {
-  background-color: var(--background-colorA);
+  margin: 0 0 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--font-color);
 }
 
 .tagWrapper {
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: var(--sel-box-color);
+  color: var(--secondary-font-color);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.contentSection {
+  margin-bottom: 14px;
+}
+
+.content {
+  position: relative;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.content.collapsed {
+  max-height: 160px;
+}
+
+.content.collapsed::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 72px;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(250, 251, 252, 0) 0%,
+    var(--background-elevated) 88%
+  );
+}
+
+.content:not(.collapsed) {
+  max-height: 4000px;
+}
+
+/* 목록 안 마크다운은 본문보다 한 단계 작게 */
+.content :global(.prose),
+.content :global([class*="prose"]) {
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.toggleBtn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 10px;
+  background: var(--background-colorA);
+  color: var(--secondary-font-color);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
-.tag {
-  font-size: 10px;
 
-  color: var(--tag-font-color);
-  background-color: var(--tag-color);
-  border-radius: 5px;
-  padding-top: 3px;
-  margin: 2px;
-  height: 20px;
-  font-weight: bold;
+.toggleBtn:hover {
+  background: var(--sel-box-color);
+  color: var(--font-color);
+  border-color: #b8c2ce;
+}
+
+.btnWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: var(--border-width) solid var(--border-color);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease, opacity 0.2s ease;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--secondary-font-color);
+}
+
+.btn.secondary:hover {
+  background: var(--sel-box-color);
+  color: var(--font-color);
+}
+
+.btn.primary {
+  background: var(--nav-dot-sel-color);
+  border-color: var(--nav-dot-sel-color);
+  color: var(--background-elevated);
+}
+
+.btn.primary:hover {
+  opacity: 0.92;
+}
+
+.icon {
+  font-size: 15px;
 }
 
 @media only screen and (min-width: 768px) {
-  .btn {
-    width: calc(50% - 4px);
+  .elementImageWrapper :global(.ant-image),
+  .imageFallback {
+    height: 280px;
   }
-  .appWrapper {
-    width: 768px;
-    padding: 0px 20px;
-  }
-}
 
-@media only screen and (min-width: 1025px) {
-  .elementInnerWrapper {
-    display: flex;
-    width: 100%;
-  }
-  .elementImageWrapper {
-    width: 30%;
-  }
   .elementContentWrapper {
-    width: 70%;
-    padding: 0px 30px;
+    padding: 22px 22px 18px;
+  }
+
+  .title {
+    font-size: 1.35rem;
+  }
+
+  .content.collapsed {
+    max-height: 200px;
+  }
+
+  .btn {
+    min-width: 120px;
   }
 }

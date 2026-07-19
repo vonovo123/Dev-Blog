@@ -1,43 +1,59 @@
 .navigation {
   display: flex;
   justify-content: center;
+  margin-top: 4px;
 }
 .wrapper {
-  border-radius: 10px;
-  justify-content: center;
+  display: inline-flex;
   align-items: center;
-  display: flex;
-  transition: all 0.5s;
+  justify-content: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: var(--background-elevated);
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(44, 51, 61, 0.05);
 }
 .dots {
   display: flex;
   flex-wrap: wrap;
-  cursor: pointer;
+  align-items: center;
+  gap: 6px;
 }
 .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 100%;
-  margin: 5px 10px 5px 10px;
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 4px;
   background-color: var(--nav-dot-color);
-  transition: all 1s;
+  transition: width 0.2s ease, background-color 0.2s ease;
 }
 .dot.sel {
-  width: 20px;
-  height: 13px;
-  border-radius: 0%;
+  width: 18px;
   background-color: var(--nav-dot-sel-color);
+}
+.arrow:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .arrow {
-  width: 10px;
-  height: 10px;
-  display: flex;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--secondary-font-color);
   cursor: pointer;
-  font-size: 18px;
-  margin: 5px 20px 5px 20px;
+  font-size: 16px;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
-@media only screen and (max-width: 767px) {
+.arrow:hover {
+  background: var(--sel-box-color);
+  color: var(--font-color);
 }

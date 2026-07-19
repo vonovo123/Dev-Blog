@@ -2,11 +2,11 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
   overflow: hidden;
 }
 .carousel {
-  width: 92%;
+  width: 100%;
 }
 
 .row {
@@ -20,10 +20,10 @@
   flex-grow: 0;
   flex-shrink: 0;
   width: 25%;
-  padding: 1%;
+  padding: 0 8px;
+  box-sizing: border-box;
 }
 
-/*  < lg  */
 @media only screen and (max-width: 1199px) {
   .col {
     width: 25%;
@@ -34,9 +34,9 @@
     width: 50%;
   }
 }
-/* md < */
 @media only screen and (max-width: 767px) {
   .col {
     width: 100%;
+    padding: 0 2px;
   }
 }

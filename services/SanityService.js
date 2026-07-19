@@ -168,7 +168,8 @@ const reCommentByCommentId = `
 }[$start...$end]`;
 
 const portpolioUrl = `
-  *[_type == 'portpolio' && references(*[_type=="subCategory" && type == $subCategory]._id)]{
+  *[_type == 'portpolio' && !(_id in path("drafts.**")) && references(*[_type=="subCategory" && type == $subCategory]._id)]{
+    _id,
     'category' : category -> {
       name,
       type
