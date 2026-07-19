@@ -32,7 +32,7 @@ export default function CareerPage({
       page = PAGE_TYPE;
       path = { menu: "career", subMenu: "career" };
     }
-    if (!path || !path.menu || !path.subMenu) {
+    if (!path || path.menu !== "career" || !path.subMenu) {
       path = { menu: "career", subMenu: "career" };
     }
 
@@ -51,8 +51,8 @@ export default function CareerPage({
   }, [menuType]);
 
   useEffect(() => {
-    if (!subMenu) return;
     if (menuType === PAGE_TYPE) {
+      if (!subMenu) return;
       fetchPostData();
       return;
     }

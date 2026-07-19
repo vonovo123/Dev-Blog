@@ -18,7 +18,7 @@ export default function PortfolioPage({
   home,
 }) {
   const [menuType, setMenuType] = menuTypeState;
-  const [subMenu, setSubMenu] = subMenuState;
+  const [subMenu] = subMenuState;
   const [, setPageView] = pageViewState;
   const [, setCachedPath] = cachedPathState;
   const routeReady = useRef(false);
@@ -27,11 +27,12 @@ export default function PortfolioPage({
     routeReady.current = false;
     let page = getLocalData("page");
     let path = getLocalData("path");
+    // page만 portpolio이고 path는 home/recent인 경우가 있어 menu까지 검증
     if (!page || page !== PAGE_TYPE) {
       page = PAGE_TYPE;
       path = { menu: "portpolio", subMenu: "htmlCss" };
     }
-    if (!path || !path.menu || !path.subMenu) {
+    if (!path || path.menu !== "portpolio" || !path.subMenu) {
       path = { menu: "portpolio", subMenu: "htmlCss" };
     }
 
@@ -50,12 +51,12 @@ export default function PortfolioPage({
   }, [menuType]);
 
   useEffect(() => {
-    if (!subMenu) return;
     if (menuType === PAGE_TYPE) {
+      if (!subMenu) return;
       fetchPostData();
       return;
     }
-    // 이전 페이지의 menuType이 남은 상태에서는 이동하지 않음
+    // 다른 페이지 타입 선택 시 subMenu 유무와 관계없이 이동
     if (!routeReady.current || !menuType) return;
     goPage();
   }, [subMenu, menuType]);

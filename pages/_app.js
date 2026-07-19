@@ -87,15 +87,40 @@ export default function MyApp({ Component, pageProps }) {
     if (!menuType) return;
     setPage(menuType);
     setLocalData("page", menuType);
+
     const target =
       menuType === "post"
         ? "/"
         : menuType === "portpolio"
           ? "/portfolio"
           : `/${menuType}`;
+
+    // 페이지 타입이 바뀔 때 path가 이전 페이지(home/recent 등)로 남지 않도록 동기화
+    let nextPath;
+    if (menuType === "post") {
+      const stayingOnPost = router.pathname === "/";
+      const isPostMenu =
+        menu && menu !== "portpolio" && menu !== "career";
+      nextPath =
+        stayingOnPost && isPostMenu
+          ? { menu, subMenu: subMenu || "recent" }
+          : { menu: "home", subMenu: "recent" };
+    } else if (menuType === "portpolio") {
+      const stayingOnPortfolio = router.pathname === "/portfolio";
+      nextPath =
+        stayingOnPortfolio && menu === "portpolio" && subMenu
+          ? { menu: "portpolio", subMenu }
+          : { menu: "portpolio", subMenu: "htmlCss" };
+    } else if (menuType === "career") {
+      nextPath = { menu: "career", subMenu: "career" };
+    }
+    if (nextPath) {
+      setLocalData("path", nextPath);
+    }
+
     if (router.pathname === target) return;
     router.push({ pathname: target });
-  }, [menuType, router]);
+  }, [menuType, menu, subMenu, router]);
   const goMain = useCallback(() => {
     if (page === "post") {
       setCachedPath({ page, menu: "home", subMenu: "recent" });
@@ -159,11 +184,12 @@ export default function MyApp({ Component, pageProps }) {
     setLoading(true);
     setPage(page);
     setMenu(menu);
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setSubMenu(subMenu);
     }, 1000);
     setLocalData("page", page);
     setLocalData("path", { menu, subMenu });
+    return () => clearTimeout(timer);
   }, [cachedPath]);
 
   useEffect(() => {

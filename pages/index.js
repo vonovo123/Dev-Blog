@@ -32,7 +32,14 @@ export default function Home({
       page = PAGE_TYPE;
       path = { menu: "home", subMenu: "recent" };
     }
-    if (!path || !path.menu || !path.subMenu) {
+    // 포트폴리오/커리어 path가 남아 있으면 홈 최근글로 강제 복원하지 않고 기본값으로 정리
+    if (
+      !path ||
+      !path.menu ||
+      !path.subMenu ||
+      path.menu === "portpolio" ||
+      path.menu === "career"
+    ) {
       path = { menu: "home", subMenu: "recent" };
     }
 
@@ -51,11 +58,12 @@ export default function Home({
   }, [menuType]);
 
   useEffect(() => {
-    if (!subMenu) return;
     if (menuType === PAGE_TYPE) {
+      if (!subMenu) return;
       fetchPostData();
       return;
     }
+    // 포트폴리오 등 다른 타입 선택 시 subMenu가 비워져도 바로 이동
     if (!routeReady.current || !menuType) return;
     goPage();
   }, [subMenu, menuType]);
