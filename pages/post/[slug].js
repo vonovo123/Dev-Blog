@@ -44,6 +44,9 @@ export default function Post({
   const eod = useRef(null);
   const commentRef = useRef(null);
   const commentListRef = useRef(null);
+  // content 로드로 인해 자동으로 세팅되는 첫 subMenu 변경은
+  // 사용자가 헤더 탭을 클릭한 것이 아니므로 goPage()를 건너뛰기 위한 플래그
+  const initializingSubMenuRef = useRef(false);
 
   const loadNextComments = useCallback(
     async (id, start, end) => {
@@ -134,7 +137,7 @@ export default function Post({
     const page = content.category.type;
     const path = {
       menu: content.category.slug,
-      subMenu: null,
+      subMenu: content.subCategory.type,
     };
     const main = content.category.name;
     const sub = content.subCategory.name;
@@ -142,6 +145,7 @@ export default function Post({
     const newTitle = { main, sub, title };
     setPostTitle(newTitle);
     setMenuType(page);
+    initializingSubMenuRef.current = true;
     setCachedPath({
       page,
       ...path,
@@ -153,6 +157,12 @@ export default function Post({
   }, [content]);
   useEffect(() => {
     if (!subMenu) {
+      return;
+    }
+    // 글 로드 시 자동으로 세팅된 subMenu(초기화)는 페이지 이동을 트리거하지 않고,
+    // 이후 사용자가 헤더의 다른 하위 탭을 직접 클릭했을 때만 목록으로 이동한다.
+    if (initializingSubMenuRef.current) {
+      initializingSubMenuRef.current = false;
       return;
     }
     goPage();
